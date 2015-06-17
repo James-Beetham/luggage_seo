@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * Checks if luggage_indicator module displays page type on page
+ *
+ * Creates 3 pages:
+ *   One with luggage_indicator module enabled.
+ *   One with luggage_indicator module disabled.
+ *   One with a custom content type (luggage_indicator module enabled).
+ */
+class luggageSeoPermissionsTests extends DrupalWebTestCase {
+
+  protected $admin_user;
+  
+  public static function getInfo() {
+    return array(
+      'name' => 'Luggage SEO Test',
+      'description' => 'Tests if the luggage SEO module is working correctly.',
+      'group' => 'Luggage',
+    );
+  }
+  
+  /**
+   * Adds luggage_indicator module to enviornment and sets admin_user variable.
+   */
+  public function setUp() {
+    parent::setUp(array(
+      'basic_seo_rules',
+      'seo_checker',
+      'ctools',
+      'features',
+      'globalredirect',
+      'keyword_rules',
+      'linkchecker',
+      'admin_menu',
+      'better_formats',
+      'ds',
+      'ds_extras',
+      'ds_format',
+      'ds_forms',
+      'ds_search',
+      'jammer',
+      'ckeditor',
+      'image_resize_filter',
+      'insert',
+      'pathologic',
+      'strongarm',
+      'wysiwyg_filter',
+      'admin_menu_toolbar',
+      'auto_entitylabel',
+      'entity',
+      'date',
+      'date_api',
+      'date_popup',
+      'date_views',
+      'views',
+      'diff',
+      'email',
+      'entity_token',
+      'environment_indicator',
+      'field_group',
+      'libraries',
+      'link',
+      'panels',
+      'pathauto',
+      'token',
+      'rules',
+      'scheduler',
+      'update',
+      'publishcontent',
+      'metatag',
+      'read_more',
+      'site_map',
+      'xmlsitemap',
+      'xmlsitemap_engines',
+      'xmlsitemap_menu',
+      'xmlsitemap_node',
+      'xmlsitemap_taxonomy',
+      'luggage_ckeditor',
+      'luggage_contrib',
+      'luggage_core',
+      'luggage_roles',
+
+
+
+    ));
+    $this->admin_user = $this->drupalCreateUser(array(
+      'administer modules',
+    ));
+  }
+
+
+  public function testModulesActive() {
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/modules');
+  }
+
+
+}
