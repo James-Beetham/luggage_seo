@@ -1,12 +1,7 @@
 <?php
 
 /**
- * Checks if luggage_indicator module displays page type on page
- *
- * Creates 3 pages:
- *   One with luggage_indicator module enabled.
- *   One with luggage_indicator module disabled.
- *   One with a custom content type (luggage_indicator module enabled).
+ * Checks if luggage_seo module displays page type on page
  */
 class luggageSeoPermissionsTests extends DrupalWebTestCase {
 
@@ -21,7 +16,7 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
   }
   
   /**
-   * Adds luggage_indicator module to enviornment and sets admin_user variable.
+   * Adds modules needed for luggage_seo module.
    */
   public function setUp() {
     parent::setUp(array(
@@ -79,9 +74,6 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
       'luggage_ckeditor',
       'luggage_contrib',
       'luggage_core',
-      'luggage_roles',
-
-
 
     ));
     $this->admin_user = $this->drupalCreateUser(array(
@@ -89,11 +81,9 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
     ));
   }
 
-
+  // Goes to admin modules page (to see whats been activated).
   public function testModulesActive() {
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/modules');
   }
-
-
 }
