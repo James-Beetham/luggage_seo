@@ -1,8 +1,10 @@
 <?php
 
 /**
- * Checks if luggage_seo module displays page type on page
+ * Tests luggage_seo for footer, perms, and meta tags
  */
+ 
+ 
 class luggageSeoPermissionsTests extends DrupalWebTestCase {
 
   protected $admin_user;
@@ -15,9 +17,7 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
     );
   }
   
-  /**
-   * Adds modules needed for luggage_seo module.
-   */
+  // Adds modules needed for luggage_seo module.
   public function setUp() {
     parent::setUp(array(
       'basic_seo_rules',
@@ -71,19 +71,64 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
       'xmlsitemap_menu',
       'xmlsitemap_node',
       'xmlsitemap_taxonomy',
+
+    ));
+  
+    // Adds features needed for luggage seo.
+    $featureModules = array(
       'luggage_ckeditor',
       'luggage_contrib',
       'luggage_core',
-
-    ));
+      'luggage_roles',
+      'luggage_seo',
+    );
+    features_install_modules($featureModules);
+    
+    // Creates admin_user with following perms.
     $this->admin_user = $this->drupalCreateUser(array(
       'administer modules',
+      'administer permissions',
+      'administer blocks',
     ));
   }
 
-  // Goes to admin modules page (to see whats been activated).
-  public function testModulesActive() {
+  /**
+   * Tests modules active, permissions created, and meta tags.
+   */
+  public function testLuggageSeoComponents() {
+    //Logs in admin_user and checks features enabled.
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/modules');
+    $this->assertText('luggage_seo (enabled)', 'luggage_seo module is enabled');
+
+    // Checks footer text (in footer block).
+    $this->drupalGet('admin/structure/block');
+    $rawCode = 'blocks[menu_menu-footer][region]';
+    $this->assertRaw($rawCode, 'Footer is in the blocks menu');
+    $this->drupalGet('admin/people/permissions');
+    $this->assertText('SEO editor','SEO editor group is present');
+    debug('Note: Number of roles present and permissions selected effect following assertions (false may not be false).');
+
+    // Commented out perms are given to auth_user by default.
+    $perms = array(
+      'edit-9-access-broken-links-report',
+      //'edit-9-access-own-broken-links-report',
+      'edit-9-administer-linkchecker',
+      'edit-9-edit-link-settings',
+      'edit-9-administer-meta-tags',
+      'edit-9-edit-meta-tags',
+      'edit-9-administer-seo-checker-configuration',
+      'edit-9-skip-seo-checks',
+      'edit-9-allow-seo-check-failures',
+      //'edit-9-access-site-map',
+      'edit-9-administer-xmlsitemap',
+    );
+    
+    // $value variable is number of elements in $perms list.
+    For($value = 9; $value != 0; $value--) {
+      $message = 'Permissions "' . $perms[$value-1] . '" is enabled';
+      $this->assertFieldChecked($perms[$value-1], $message);
+    }
+    debug('End note.');    
   }
 }
