@@ -1,13 +1,10 @@
 <?php
 
 /**
- * Tests luggage_seo for footer, perms, and meta tags
+ * Tests luggage_seo for footer in blocks menu and added roles andpermissions.
  */
- 
- 
-class luggageSeoPermissionsTests extends DrupalWebTestCase {
 
-  protected $admin_user;
+class luggageSeoPermissionsTests extends DrupalWebTestCase {
   
   public static function getInfo() {
     return array(
@@ -17,7 +14,7 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
     );
   }
   
-  // Adds modules needed for luggage_seo module.
+  // Activates modules needed for luggage_seo module.
   public function setUp() {
     parent::setUp(array(
       'basic_seo_rules',
@@ -84,16 +81,20 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
     );
     features_install_modules($featureModules);
     
-    // Creates admin_user with following perms.
-    $this->admin_user = $this->drupalCreateUser(array(
+    
+    $permissions = array(
       'administer modules',
       'administer permissions',
       'administer blocks',
-    ));
+    );
+    
+    
+    // Creates admin_user with following perms.
+    $this->admin_user = $this->drupalCreateUser($permissions);
   }
 
   /**
-   * Tests modules active, permissions created, and meta tags.
+   * Tests modules active, and permissions / roles created.
    */
   public function testLuggageSeoComponents() {
     //Logs in admin_user and checks features enabled.
@@ -108,7 +109,7 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
     $this->drupalGet('admin/people/permissions');
     $this->assertText('SEO editor','SEO editor group is present');
     debug('Note: Number of roles present and permissions selected effect following assertions (false may not be false).');
-
+    
     // Commented out perms are given to auth_user by default.
     $perms = array(
       'edit-9-access-broken-links-report',
@@ -124,11 +125,12 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
       'edit-9-administer-xmlsitemap',
     );
     
-    // $value variable is number of elements in $perms list.
+    // $value variable is number of elements in $perms array.
     For($value = 9; $value != 0; $value--) {
       $message = 'Permissions "' . $perms[$value-1] . '" is enabled';
       $this->assertFieldChecked($perms[$value-1], $message);
     }
-    debug('End note.');    
+    debug('End note.');
+    
   }
 }
