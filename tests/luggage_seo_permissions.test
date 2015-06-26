@@ -107,7 +107,7 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
     $rawCode = 'blocks[menu_menu-footer][region]';
     $this->assertRaw($rawCode, 'Footer is in the blocks menu');
     $this->drupalGet('admin/people/permissions');
-    $this->assertText('SEO editor','SEO editor group is present');
+    $this->assertText('SEO editor', 'SEO editor group is present');
     debug('Note: Number of roles present and permissions selected effect following assertions (false may not be false).');
     
     // Commented out perms are given to auth_user by default.
@@ -126,7 +126,7 @@ class luggageSeoPermissionsTests extends DrupalWebTestCase {
     );
     
     // $value variable is number of elements in $perms array.
-    For($value = 9; $value != 0; $value--) {
+    For ($value = 9; $value != 0; $value--) {
       $message = 'Permissions "' . $perms[$value-1] . '" is enabled';
       $this->assertFieldChecked($perms[$value-1], $message);
     }
